@@ -84,9 +84,9 @@ def write_deterministic_file(
     archive_name = PurePosixPath(*destination.parts).as_posix()
     info = zipfile.ZipInfo(archive_name, date_time=ZIP_TIMESTAMP)
     info.create_system = 3
-    info.compress_type = zipfile.ZIP_DEFLATED
+    info.compress_type = zipfile.ZIP_STORED
     info.external_attr = ((0o100755 if executable else 0o100644) << 16)
-    archive.writestr(info, source.read_bytes(), compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+    archive.writestr(info, source.read_bytes(), compress_type=zipfile.ZIP_STORED)
 
 
 def write_core_zip(platform_id: str) -> Path:
