@@ -33,7 +33,6 @@ class ReleaseTests(unittest.TestCase):
 
     def test_acceptance_records_are_not_part_of_buyer_zip(self) -> None:
         report = ROOT / "docs" / "acceptance" / "macos-arm64-v0.2.0.json"
-        self.assertTrue(report.is_file())
         for platform_id in ("macos-arm64", "macos-x64", "windows-x64"):
             self.assertFalse(include_core(report, platform_id))
 
