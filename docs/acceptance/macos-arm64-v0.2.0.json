@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "productVersion": "0.2.0",
+  "acceptedAt": "2026-07-31T16:39:06.311661+00:00",
+  "acceptedCommit": "bbcac6cfafb4b30b970ba91be78e1d587f8633d6",
+  "platform": "macos-arm64",
+  "artifact": "talking-head-ad-machine-macos-arm64-v0.2.0.zip",
+  "artifactSha256": "5888fcab0f47aa0f04c5bf8e85acac6f431f30176cea43aa2f95935156cf9f00",
+  "acceptanceClass": "buyer-platform",
+  "freshSetup": true,
+  "installerIdempotence": true,
+  "doctorRequiredPassed": 9,
+  "dependencyPins": {
+    "kinocut": "1.11.1",
+    "mcp": "1.29.0",
+    "hyperframes": "0.7.86"
+  },
+  "goldenHyperFrames": true,
+  "paidModulesInstalled": 2,
+  "fullMediaWorkflow": {
+    "success": true,
+    "transcriptionModel": "small.en",
+    "transcriptEntries": 66,
+    "cleanRenderDurationSeconds": 17.354,
+    "designedPreview": true,
+    "qaReviewAndSupport": true,
+    "sourceSha256": "dec313a9db3c80ceb4055716a977110e04be99860a1ace53ce900f2ea71965e9",
+    "sourceUnchanged": true
+  }
+}
