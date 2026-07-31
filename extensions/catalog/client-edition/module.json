@@ -3,8 +3,7 @@
   "id": "client-edition",
   "displayName": "Client Edition",
   "version": "0.1.0",
-  "requiresCore": "0.1.x",
+  "requiresCore": "0.1.x || 0.2.x",
   "capabilities": ["multi-brand", "client-namespaces", "white-label-review", "revision-history"],
   "saleStatus": "disabled-until-complete"
 }
-

@@ -1,5 +1,7 @@
 .DS_Store
 .venv/
+.runtime/
+acceptance/
 node_modules/
 dist/
 build/
@@ -14,4 +16,3 @@ config/brand.json
 support-report*.zip
 extensions/installed/
 examples/first-ad/generated/
-

@@ -4,6 +4,7 @@ import shutil
 from pathlib import Path
 
 from .jobs import load_job, record_artifact, reusable_artifacts, set_stage
+from .platforms import node_executable, product_environment
 from .util import read_json_value, run, write_json_atomic
 
 
@@ -15,7 +16,9 @@ def transcribe_job(job_dir: Path, *, model: str = "small.en", language: str = "e
     if existing and not force:
         return {"success": True, "reused": True, "transcript": str(output)}
 
-    hyperframes = shutil.which("hyperframes")
+    root = Path(__file__).resolve().parents[1]
+    local_hyperframes = node_executable(root, "hyperframes")
+    hyperframes = str(local_hyperframes) if local_hyperframes.is_file() else shutil.which("hyperframes")
     if not hyperframes:
         raise RuntimeError("HyperFrames is unavailable; run setup and doctor")
     work = job_dir / "cache" / "transcription"
@@ -33,6 +36,8 @@ def transcribe_job(job_dir: Path, *, model: str = "small.en", language: str = "e
             language,
             "--json",
         ],
+        cwd=root,
+        env=product_environment(root),
         timeout=3600,
     )
     generated = work / "transcript.json"
@@ -45,4 +50,3 @@ def transcribe_job(job_dir: Path, *, model: str = "small.en", language: str = "e
     record_artifact(job_dir, "transcript", output, producer=f"hyperframes-transcribe:{model}", input_hashes={"source": job["source"]["sha256"]})
     set_stage(job_dir, "transcribed", f"Local transcript created with {model}")
     return {"success": True, "reused": False, "transcript": str(output), "entries": len(transcript)}
-

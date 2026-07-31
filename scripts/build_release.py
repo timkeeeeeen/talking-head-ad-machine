@@ -15,15 +15,25 @@ DIST = ROOT / "dist"
 
 EXCLUDED_PARTS = {
     ".git",
+    ".github",
     ".venv",
     "node_modules",
     "dist",
     "build",
     "__pycache__",
     ".pytest_cache",
+    ".runtime",
     "installed",
     "generated",
 }
+CORE_PLATFORMS = ("macos-arm64", "macos-x64", "windows-x64")
+MAC_ONLY_FILES = {
+    Path("install.sh"),
+    Path("bin/ad-machine"),
+    Path("START-WITH-CODEX.command"),
+    Path("START-WITH-CLAUDE.command"),
+}
+WINDOWS_ONLY_FILES = {Path("install.ps1"), Path("bin/ad-machine.ps1")}
 EXCLUDED_SUFFIXES = {".pyc", ".pyo", ".DS_Store"}
 FORBIDDEN_TEXT = (
     b"/Users/" + b"lappy",
@@ -40,9 +50,11 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def include_core(path: Path) -> bool:
+def include_core(path: Path, platform_id: str) -> bool:
     relative = path.relative_to(ROOT)
     if any(part in EXCLUDED_PARTS for part in relative.parts):
+        return False
+    if relative.parts and relative.parts[0] == "acceptance":
         return False
     if relative.parts[:2] == ("extensions", "catalog"):
         return False
@@ -50,16 +62,22 @@ def include_core(path: Path) -> bool:
         return False
     if relative == Path("config/brand.json"):
         return False
+    if platform_id == "windows-x64" and relative in MAC_ONLY_FILES:
+        return False
+    if platform_id.startswith("macos-") and relative in WINDOWS_ONLY_FILES:
+        return False
     if path.suffix in EXCLUDED_SUFFIXES or path.name.startswith("support-report"):
         return False
     return path.is_file()
 
 
-def write_core_zip() -> Path:
-    output = DIST / f"talking-head-ad-machine-macos-arm64-v{VERSION}.zip"
+def write_core_zip(platform_id: str) -> Path:
+    if platform_id not in CORE_PLATFORMS:
+        raise ValueError(f"unsupported release platform: {platform_id}")
+    output = DIST / f"talking-head-ad-machine-{platform_id}-v{VERSION}.zip"
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for path in sorted(ROOT.rglob("*")):
-            if include_core(path):
+            if include_core(path, platform_id):
                 archive.write(path, Path("talking-head-ad-machine") / path.relative_to(ROOT))
     return output
 
@@ -94,7 +112,7 @@ def main() -> int:
         shutil.rmtree(DIST)
     DIST.mkdir(parents=True)
 
-    artifacts = [write_core_zip()]
+    artifacts = [write_core_zip(platform_id) for platform_id in CORE_PLATFORMS]
     for module_dir in sorted((ROOT / "extensions" / "catalog").iterdir()):
         manifest = json.loads((module_dir / "module.json").read_text(encoding="utf-8"))
         if manifest.get("saleStatus") == "disabled-until-complete" and not args.include_client_edition:
@@ -109,7 +127,15 @@ def main() -> int:
     manifest = {
         "schemaVersion": 1,
         "productVersion": VERSION,
-        "artifacts": [{"name": path.name, "sha256": sha256(path), "bytes": path.stat().st_size} for path in artifacts],
+        "artifacts": [
+            {
+                "name": path.name,
+                "sha256": sha256(path),
+                "bytes": path.stat().st_size,
+                "platform": next((item for item in CORE_PLATFORMS if f"-{item}-" in path.name), None),
+            }
+            for path in artifacts
+        ],
     }
     (DIST / "release-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(manifest, indent=2))

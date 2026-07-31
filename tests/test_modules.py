@@ -23,7 +23,7 @@ class ModuleTests(unittest.TestCase):
             "id": "test-module",
             "displayName": "Test Module",
             "version": "0.1.0",
-            "requiresCore": "0.1.x",
+            "requiresCore": "0.1.x || 0.2.x",
             "capabilities": ["test"],
         }
         with tempfile.TemporaryDirectory() as temporary:
@@ -60,4 +60,3 @@ class ModuleTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

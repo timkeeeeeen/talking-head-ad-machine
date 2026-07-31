@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -14,6 +13,7 @@ from .doctor import doctor_report, format_doctor, report_json
 from .jobs import create_job, load_job, reusable_artifacts, save_job
 from .modules import install_module, installed_modules
 from .plans import validate_and_normalize
+from .platforms import open_path
 from .profiles import DEFAULT_PROFILE, load_profile, save_profile
 from .qa import inspect_output
 from .render import duration_matches, duration_seconds, expected_plan_duration, normalize_dialogue, primary_fps, render_ffmpeg_concat
@@ -38,8 +38,7 @@ def _print(value: object, as_json: bool = False) -> None:
 
 
 def _open(path: Path) -> None:
-    if sys.platform == "darwin":
-        subprocess.run(["open", str(path)], check=False)
+    open_path(path)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -47,7 +46,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--version", action="version", version=VERSION)
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    setup_parser = subparsers.add_parser("setup", help="Plan or apply supported Mac setup")
+    setup_parser = subparsers.add_parser("setup", help="Plan or apply supported Windows or macOS setup")
     setup_parser.add_argument("--apply", action="store_true", help="Install the planned dependencies")
     setup_parser.add_argument("--json", action="store_true")
 

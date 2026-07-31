@@ -12,6 +12,8 @@ from .version import VERSION
 
 
 def _version_compatible(requirement: str, version: str = VERSION) -> bool:
+    if "||" in requirement:
+        return any(_version_compatible(item.strip(), version) for item in requirement.split("||"))
     if requirement in {version, "*"}:
         return True
     if requirement.endswith(".x"):
@@ -93,4 +95,3 @@ def install_module(root: Path, archive: Path) -> dict[str, Any]:
         if backup.exists():
             shutil.rmtree(backup)
         return manifest
-

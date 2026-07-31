@@ -1,7 +1,7 @@
 {
   "name": "talking-head-ad-machine-runtime",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Pinned HyperFrames runtime for Talking-Head Ad Machine",
   "engines": {
     "node": ">=22"

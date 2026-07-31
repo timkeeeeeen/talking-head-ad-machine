@@ -63,6 +63,7 @@ def run(
     check: bool = True,
     timeout: float | None = None,
     cwd: Path | None = None,
+    env: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         [str(part) for part in command],
@@ -71,6 +72,7 @@ def run(
         text=True,
         timeout=timeout,
         cwd=cwd,
+        env=env,
     )
 
 

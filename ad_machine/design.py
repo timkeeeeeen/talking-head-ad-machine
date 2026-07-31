@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from .jobs import load_job, record_artifact, set_stage
+from .platforms import node_executable, product_environment
 from .render import duration_seconds
 from .util import read_json, read_json_value, run, sha256_file, write_json_atomic
 
@@ -352,10 +353,16 @@ def prepare_fast_composition(
 def check_composition(root: Path, project: Path) -> dict[str, Any]:
     root = root.resolve()
     project = project.expanduser().resolve()
-    hyperframes = root / "node_modules" / ".bin" / "hyperframes"
+    hyperframes = node_executable(root, "hyperframes")
     if not hyperframes.is_file():
         raise RuntimeError("local HyperFrames is unavailable; run setup")
-    result = run([hyperframes, "check", project, "--json", "--snapshots", "--strict"], cwd=root, check=False, timeout=600)
+    result = run(
+        [hyperframes, "check", project, "--json", "--snapshots", "--strict"],
+        cwd=root,
+        env=product_environment(root),
+        check=False,
+        timeout=600,
+    )
     payload_text = result.stdout.strip()
     try:
         payload = json.loads(payload_text)
@@ -371,7 +378,7 @@ def render_preview(root: Path, job_dir: Path, variant_id: str, project: Path, ou
     root = root.resolve()
     job_dir = job_dir.expanduser().resolve()
     project = project.expanduser().resolve()
-    hyperframes = root / "node_modules" / ".bin" / "hyperframes"
+    hyperframes = node_executable(root, "hyperframes")
     if not hyperframes.is_file():
         raise RuntimeError("local HyperFrames is unavailable; run setup")
     manifest = read_json(project / "composition.json")
@@ -380,6 +387,7 @@ def render_preview(root: Path, job_dir: Path, variant_id: str, project: Path, ou
     run(
         [hyperframes, "render", project, "--quality", "draft", "--strict", "--strict-variables", "--output", output],
         cwd=root,
+        env=product_environment(root),
         timeout=3600,
     )
     if not output.is_file() or output.stat().st_size == 0:

@@ -1,9 +1,15 @@
 # Compatibility
 
-Version `0.1.0` targets Apple Silicon Macs and supports Codex and Claude Code as the operating agents.
+Version `0.2.0` targets Windows 11 x64, Apple Silicon macOS, and Intel macOS. Codex or Claude Code is required as the operating agent. Linux and Windows ARM are out of scope.
 
-The current development machine passes required checks with Kinocut `1.11.1`, MCP Python SDK `1.29.0`, HyperFrames `0.7.86`, FFmpeg, FFprobe, whisper.cpp, Node, and npm. MCP Python SDK 2.0 is intentionally excluded because Kinocut `1.11.1` still imports the MCP 1.x `fastmcp` package path. Docker, local TTS, generated music, and DaVinci Resolve are optional.
+| Platform | Artifact | Current claim status |
+| --- | --- | --- |
+| Apple Silicon macOS | `talking-head-ad-machine-macos-arm64-v0.2.0.zip` | Accepted on 2026-07-31; see `docs/acceptance/macos-arm64-v0.2.0.json` |
+| Intel macOS | `talking-head-ad-machine-macos-x64-v0.2.0.zip` | Candidate until a clean Intel Mac acceptance report passes |
+| Windows 11 x64 | `talking-head-ad-machine-windows-x64-v0.2.0.zip` | Candidate until a clean Windows 11 acceptance report passes |
 
-Planning recommendation is 16 GB memory and 10 GB free disk, but public minimum claims remain provisional until the buyer ZIP passes a clean supported-Mac test.
+Structural checks and mocked platform tests are necessary but are not platform acceptance. Sales copy may call a platform supported only when that exact artifact has completed setup, doctor, demo, transcription, clean cutting, HyperFrames rendering, QA, review generation, and support-report creation on a matching clean machine.
 
-Windows, Intel Mac, and Linux are not supported in version `0.1.0`.
+The locked runtime uses Kinocut `1.11.1`, MCP Python SDK `1.29.0`, HyperFrames `0.7.86`, Python `3.12`, Node `22` or newer, FFmpeg, FFprobe, and whisper.cpp. MCP Python SDK 2.0 is intentionally excluded because Kinocut `1.11.1` still imports the MCP 1.x `fastmcp` package path. Docker, local TTS, generated music, and DaVinci Resolve are optional.
+
+Planning guidance is 16 GB memory and 10 GB free disk. Public minimum operating-system, memory, disk, and installation-time claims remain provisional until clean-machine acceptance supplies evidence.

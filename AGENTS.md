@@ -6,5 +6,4 @@ The buyer may be nontechnical. Own commands, files, setup, and recovery. Ask onl
 
 Never overwrite camera originals, invent claims, upload media without permission, approve a preview for the buyer, or publish an ad.
 
-Use `./bin/ad-machine` as the stable product command surface. Keep generated work in `jobs/`. Preserve receipts and source hashes.
-
+Use `./bin/ad-machine` on macOS or `powershell -ExecutionPolicy Bypass -File .\bin\ad-machine.ps1` on Windows as the stable product command surface. Keep generated work in `jobs/`. Preserve receipts and source hashes.

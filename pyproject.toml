@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "talking-head-ad-machine"
-version = "0.1.0"
+version = "0.2.0"
 description = "Local-first agent workspace for reviewable talking-head social ads"
 requires-python = ">=3.11"
 license = { text = "Proprietary product wrapper; see LICENSE.md and THIRD_PARTY_NOTICES.md" }
@@ -16,4 +16,3 @@ ad-machine = "ad_machine.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["ad_machine*"]
-

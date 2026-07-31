@@ -1,0 +1,105 @@
+name: Compatibility
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install FFmpeg on macOS
+        if: runner.os == 'macOS'
+        run: brew install ffmpeg
+      - name: Install FFmpeg on Windows
+        if: runner.os == 'Windows'
+        run: choco install ffmpeg --no-progress -y
+      - run: npm ci
+      - run: python -m pip install -e .
+      - run: python -m unittest discover -s tests -v
+
+  windows-runtime-acceptance:
+    name: Windows x64 full runtime acceptance
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install FFmpeg
+        run: choco install ffmpeg --no-progress -y
+      - name: Install pinned Python runtime
+        run: python -m pip install -e . "kinocut==1.11.1" "mcp==1.29.0"
+      - run: npm ci
+      - name: Install pinned whisper.cpp
+        shell: pwsh
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP "whisper-bin-x64.zip"
+          $destination = Join-Path $env:RUNNER_TEMP "whisper.cpp"
+          Invoke-WebRequest -Uri "https://github.com/ggml-org/whisper.cpp/releases/download/v1.9.1/whisper-bin-x64.zip" -OutFile $archive
+          $actual = (Get-FileHash -Path $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+          $expected = "7d8be46ecd31828e1eb7a2ecdd0d6b314feafd82163038ab6092594b0a063539"
+          if ($actual -ne $expected) { throw "whisper.cpp checksum mismatch" }
+          Expand-Archive -Path $archive -DestinationPath $destination -Force
+          (Join-Path $destination "Release") | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - name: Install HyperFrames browser
+        run: npx hyperframes browser ensure
+      - name: Run full Windows runtime workflow
+        run: python scripts/platform_acceptance.py --model small.en --acceptance-class runtime-ci
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-x64-runtime-acceptance
+          path: acceptance/windows-x64/latest-report.json
+
+  intel-mac-buyer-zip-acceptance:
+    name: Intel Mac buyer ZIP acceptance
+    runs-on: macos-14
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build release artifacts
+        run: python scripts/build_release.py
+      - name: Run exact Intel Mac artifact gate
+        run: python scripts/verify_release.py --platform macos-x64 --fresh-setup --golden --full-workflow
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: macos-x64-buyer-zip-acceptance
+          path: |
+            dist/acceptance-report-macos-x64.json
+            dist/media-acceptance-report-macos-x64.json
+
+  release-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/build_release.py
+      - run: python scripts/verify_release.py --platform windows-x64

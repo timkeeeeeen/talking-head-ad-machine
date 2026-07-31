@@ -4,7 +4,7 @@ import json
 import math
 import shutil
 import tempfile
-from pathlib import Path
+from pathlib import Path, PurePath
 from typing import Any
 
 from .util import run
@@ -63,6 +63,11 @@ def duration_tolerance(fps: float) -> float:
 
 def duration_matches(expected: float, actual: float, fps: float) -> bool:
     return math.fabs(expected - actual) <= duration_tolerance(fps)
+
+
+def ffmpeg_concat_entry(path: PurePath) -> str:
+    escaped = path.as_posix().replace("'", "'\\''")
+    return f"file '{escaped}'\n"
 
 
 def render_ffmpeg_concat(
@@ -136,7 +141,7 @@ def render_ffmpeg_concat(
 
         concat_file = temporary_dir / "concat.txt"
         concat_file.write_text(
-            "".join(f"file '{path.as_posix()}'\n" for path in segment_paths),
+            "".join(ffmpeg_concat_entry(path) for path in segment_paths),
             encoding="utf-8",
         )
         combined = temporary_dir / "combined.mp4"

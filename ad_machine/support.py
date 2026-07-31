@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import json
-import platform
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
 from .doctor import doctor_report
 from .jobs import load_job
+from .platforms import detect_platform
 from .version import VERSION
 
 
@@ -33,11 +33,12 @@ def _sanitized_job(job_dir: Path) -> dict:
 
 
 def create_support_report(root: Path, output: Path, job_dir: Path | None = None) -> Path:
+    spec = detect_platform()
     payload = {
         "schemaVersion": 1,
         "createdAt": datetime.now(timezone.utc).isoformat(),
         "productVersion": VERSION,
-        "platform": {"system": platform.system(), "machine": platform.machine()},
+        "platform": {"id": spec.id, "system": spec.system, "machine": spec.machine},
     }
     output = output.expanduser().resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -47,4 +48,3 @@ def create_support_report(root: Path, output: Path, job_dir: Path | None = None)
         if job_dir:
             archive.writestr("job-sanitized.json", json.dumps(_sanitized_job(job_dir), indent=2) + "\n")
     return output
-

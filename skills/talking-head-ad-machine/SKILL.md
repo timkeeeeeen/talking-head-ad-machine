@@ -7,7 +7,7 @@ description: Turn user-owned talking-head recordings into truthful, reviewable F
 
 Operate the product workspace for the buyer. Protect the camera original, preserve the speaker's meaning, keep creative decisions inspectable, and stop for approval at the preview.
 
-Use `./bin/ad-machine` from the product root for product commands. Do not ask the buyer to run terminal commands, edit JSON, configure MCP, or debug dependencies.
+Use `./bin/ad-machine` on macOS and `powershell -ExecutionPolicy Bypass -File .\bin\ad-machine.ps1` on Windows. The examples below use the shorter macOS spelling; translate it to the Windows command surface when required. Do not ask the buyer to run terminal commands, edit JSON, configure MCP, or debug dependencies.
 
 ## Non-negotiable rules
 
@@ -25,13 +25,15 @@ Read [creative-rules.md](references/creative-rules.md) before selecting cuts or 
 
 ## 1. Preflight the workspace
 
-Run:
+Detect the platform first. If the product environment does not exist, explain the installation plan and run `./install.sh` on macOS or `powershell -ExecutionPolicy Bypass -File .\install.ps1` on Windows. Own ordinary prompts and recovery; ask the buyer only when the operating system requires their password or administrator approval.
+
+Then run:
 
 ```bash
 ./bin/ad-machine doctor --json
 ```
 
-If required checks fail, run `./bin/ad-machine setup` to inspect the repair plan, explain material changes in plain language, then run `./bin/ad-machine setup --apply`. Docker, TTS, generated music, and Resolve are optional and must not block the core workflow.
+If required checks fail after bootstrap, run `./bin/ad-machine setup` to inspect the repair plan, explain material changes in plain language, then run `./bin/ad-machine setup --apply`. Docker, TTS, generated music, and Resolve are optional and must not block the core workflow. Do not claim platform compatibility until doctor and the included demo both pass.
 
 For first use, run `./bin/ad-machine demo --open`. A passing deterministic demo proves job creation, timestamp-reset rendering, duration verification, receipts, and local review. It does not prove creative quality on the buyer's footage.
 
