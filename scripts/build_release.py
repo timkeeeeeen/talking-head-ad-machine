@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import shutil
+import subprocess
 import zipfile
 from pathlib import Path, PurePosixPath
 
@@ -51,6 +52,22 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def tracked_source_files() -> list[Path]:
+    result = subprocess.run(
+        ["git", "-C", str(ROOT), "ls-files", "-z"],
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        message = result.stderr.decode("utf-8", errors="replace").strip()
+        raise RuntimeError(f"release builds require a Git checkout: {message}")
+    paths = [ROOT / item.decode("utf-8") for item in result.stdout.split(b"\0") if item]
+    missing = [path for path in paths if not path.is_file()]
+    if missing:
+        raise RuntimeError(f"tracked release source is missing: {missing[0].relative_to(ROOT)}")
+    return sorted(paths)
+
+
 def include_core(path: Path, platform_id: str) -> bool:
     relative = path.relative_to(ROOT)
     if any(part in EXCLUDED_PARTS for part in relative.parts):
@@ -89,12 +106,12 @@ def write_deterministic_file(
     archive.writestr(info, source.read_bytes(), compress_type=zipfile.ZIP_STORED)
 
 
-def write_core_zip(platform_id: str) -> Path:
+def write_core_zip(platform_id: str, source_paths: list[Path]) -> Path:
     if platform_id not in CORE_PLATFORMS:
         raise ValueError(f"unsupported release platform: {platform_id}")
     output = DIST / f"talking-head-ad-machine-{platform_id}-v{VERSION}.zip"
-    with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        for path in sorted(ROOT.rglob("*")):
+    with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_STORED) as archive:
+        for path in source_paths:
             if include_core(path, platform_id):
                 relative = path.relative_to(ROOT)
                 write_deterministic_file(
@@ -106,12 +123,12 @@ def write_core_zip(platform_id: str) -> Path:
     return output
 
 
-def write_module_zip(module_dir: Path) -> Path:
+def write_module_zip(module_dir: Path, source_paths: list[Path]) -> Path:
     manifest = json.loads((module_dir / "module.json").read_text(encoding="utf-8"))
     output = DIST / f"{manifest['id']}-v{manifest['version']}.zip"
-    with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        for path in sorted(module_dir.rglob("*")):
-            if path.is_file() and "__pycache__" not in path.parts:
+    with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_STORED) as archive:
+        for path in source_paths:
+            if path.is_relative_to(module_dir):
                 write_deterministic_file(archive, path, path.relative_to(module_dir))
     return output
 
@@ -136,12 +153,13 @@ def main() -> int:
         shutil.rmtree(DIST)
     DIST.mkdir(parents=True)
 
-    artifacts = [write_core_zip(platform_id) for platform_id in CORE_PLATFORMS]
+    source_paths = tracked_source_files()
+    artifacts = [write_core_zip(platform_id, source_paths) for platform_id in CORE_PLATFORMS]
     for module_dir in sorted((ROOT / "extensions" / "catalog").iterdir()):
         manifest = json.loads((module_dir / "module.json").read_text(encoding="utf-8"))
         if manifest.get("saleStatus") == "disabled-until-complete" and not args.include_client_edition:
             continue
-        artifacts.append(write_module_zip(module_dir))
+        artifacts.append(write_module_zip(module_dir, source_paths))
 
     for artifact in artifacts:
         scan_archive(artifact)
