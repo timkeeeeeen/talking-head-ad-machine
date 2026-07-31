@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "disclosure": "Synthetic presenter image and macOS system voice created solely as distributable product demonstration media.",
+  "testimonial": false,
+  "performanceClaim": false,
+  "humanReview": "pending",
+  "sourceSha256": "dec313a9db3c80ceb4055716a977110e04be99860a1ace53ce900f2ea71965e9",
+  "outputSha256": "417ee46edf50d20f121adcedc53e1ff73833a39214c35535c3b2dd4b4ee673cb",
+  "sourceDurationSeconds": 23.466667,
+  "outputDurationSeconds": 17.3,
+  "cleanRender": {
+    "output": "jobs/distributable-proof/cache/proof-clean-raw.mp4",
+    "strategy": "ffmpeg-reset-timestamps-concat",
+    "expectedDurationSeconds": 17.287,
+    "actualDurationSeconds": 17.354,
+    "fps": 30.0,
+    "toleranceSeconds": 0.25,
+    "durationMatches": true
+  },
+  "normalization": {
+    "output": "jobs/distributable-proof/previews/proof-clean-normalized.mp4",
+    "targetIntegratedLufs": -14.0,
+    "targetTruePeakDbtp": -1.5,
+    "targetLoudnessRange": 11.0,
+    "durationSeconds": 17.368
+  },
+  "hyperframes": {
+    "ok": true,
+    "version": "0.7.86"
+  },
+  "qa": {
+    "schemaVersion": 1,
+    "success": true,
+    "path": "examples/first-ad/proof/finished-4x5.mp4",
+    "durationSeconds": 17.3,
+    "expectedDurationSeconds": 17.287,
+    "fps": 30.0,
+    "video": {
+      "codec_name": "h264",
+      "width": 1080,
+      "height": 1350,
+      "pix_fmt": "yuv420p",
+      "avg_frame_rate": "30/1"
+    },
+    "audio": {
+      "codec_name": "aac",
+      "sample_rate": "48000",
+      "channels": 2,
+      "channel_layout": "stereo"
+    },
+    "loudness": {
+      "input_i": "-14.39",
+      "input_tp": "-2.88",
+      "input_lra": "1.40",
+      "input_thresh": "-24.43",
+      "output_i": "-14.03",
+      "output_tp": "-2.50",
+      "output_lra": "1.50",
+      "output_thresh": "-24.08",
+      "normalization_type": "dynamic",
+      "target_offset": "0.03"
+    },
+    "checks": {
+      "hasVideo": true,
+      "hasAudio": true,
+      "deliveryPixelFormat": true,
+      "durationMatches": true
+    },
+    "humanReview": "pending",
+    "limitations": [
+      "Automated QA does not prove semantic accuracy, caption readability, safe zones, or creative quality."
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "id": "hook-recording-pack",
+  "displayName": "Hook & Recording Pack",
+  "version": "0.1.0",
+  "requiresCore": "0.1.x",
+  "capabilities": ["hook-brief", "recording-checklist", "proof-shot-plan"],
+  "saleStatus": "candidate"
+}
+

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "campaign": null,
+  "hypothesis": null,
+  "controlJob": null,
+  "variable": "hook",
+  "variants": [],
+  "ratios": ["4:5", "9:16"],
+  "namingPattern": "{campaign}-{variable}-{value}-{ratio}-r{revision}"
+}
+

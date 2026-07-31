@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "studio",
+  "description": "Designed treatment with cached proxy subject matting and heavier compositing when the footage and brief justify it.",
+  "backgroundRemoval": true,
+  "mattingProxy": { "width": 720, "height": 480, "fps": 15 },
+  "graphics": "studio",
+  "previewResolution": "720p",
+  "finalAfterApproval": true
+}
+

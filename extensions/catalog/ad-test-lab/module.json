@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "id": "ad-test-lab",
+  "displayName": "Ad Test Lab",
+  "version": "0.1.0",
+  "requiresCore": "0.1.x",
+  "capabilities": ["variant-matrix", "shared-body-hooks", "comparison-review", "batch-naming"],
+  "saleStatus": "candidate"
+}
+

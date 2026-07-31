@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "id": "designed",
+  "description": "Evidence-backed screenshots, callouts, comparisons, and proof annotations added to the approved audio spine.",
+  "backgroundRemoval": false,
+  "graphics": "editorial",
+  "previewResolution": "720p",
+  "finalAfterApproval": true
+}
+

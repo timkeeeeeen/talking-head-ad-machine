@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "offer": "Talking-Head Ad Machine",
+  "audience": "Founders and marketers editing their own talking-head Meta ads",
+  "desiredAction": "Get the exact workflow",
+  "allowedEvidence": [
+    "The included local workflow creates edit plans, captions, QA, receipts, and review previews"
+  ],
+  "prohibitedClaims": [
+    "guaranteed ad performance",
+    "guaranteed revenue",
+    "fully offline agent reasoning"
+  ],
+  "targetDurationSeconds": [
+    15,
+    45
+  ],
+  "targetRatios": [
+    "4:5"
+  ],
+  "brandProfile": null
+}

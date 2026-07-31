@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "id": "fast",
+  "description": "Fast first preview with clean cuts, social framing, accurate captions, normalized dialogue, and restrained hook and CTA treatment.",
+  "backgroundRemoval": false,
+  "graphics": "minimal",
+  "previewResolution": "720p",
+  "finalAfterApproval": true
+}
+

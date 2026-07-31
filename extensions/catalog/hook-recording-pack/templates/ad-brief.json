@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "offer": null,
+  "audience": null,
+  "desiredAction": null,
+  "problem": null,
+  "mechanism": null,
+  "allowedEvidence": [],
+  "prohibitedClaims": [],
+  "hookDirections": [],
+  "sharedBody": null,
+  "cta": null,
+  "proofShots": []
+}
+

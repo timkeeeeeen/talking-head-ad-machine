@@ -1,0 +1,17 @@
+.DS_Store
+.venv/
+node_modules/
+dist/
+build/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+jobs/*
+!jobs/.gitkeep
+config/brand.json
+support-report*.zip
+extensions/installed/
+examples/first-ad/generated/
+

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Talking-Head Ad Machine"
+  short_description: "Turn raw talking-head footage into reviewable paid-social ads"
+  default_prompt: "Turn this talking-head video into a truthful, reviewable Facebook or Instagram ad and open a preview before finalizing."

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "path": "examples/first-ad/proof/raw-synthetic-talking-head.mp4",
+    "durationSeconds": 23.466667,
+    "sha256": "dec313a9db3c80ceb4055716a977110e04be99860a1ace53ce900f2ea71965e9"
+  },
+  "variants": [
+    {
+      "id": "proof-4x5",
+      "label": "Synthetic proof ad",
+      "targetRatios": [
+        "4:5"
+      ],
+      "segments": [
+        {
+          "sourceStart": 3.884,
+          "sourceEnd": 8.483,
+          "text": "Most people think you need a whole editing team to turn a talking head video into an ad.",
+          "reason": "Open on the complete source-backed hook",
+          "beat": "hook",
+          "confidence": 1.0,
+          "outputStart": 0.0,
+          "outputEnd": 4.599
+        },
+        {
+          "sourceStart": 8.743,
+          "sourceEnd": 17.719,
+          "text": "You don't. This kit finds the clean take, adds captions and useful graphics, checks the output, and gives you a review page before anything is final.",
+          "reason": "Keep the concrete mechanism",
+          "beat": "mechanism",
+          "confidence": 1.0,
+          "outputStart": 4.599,
+          "outputEnd": 13.575
+        },
+        {
+          "sourceStart": 17.979,
+          "sourceEnd": 21.691,
+          "text": "If you want the exact workflow, get the Talking Head Ad Machine.",
+          "reason": "Keep the direct desired action",
+          "beat": "cta",
+          "confidence": 1.0,
+          "outputStart": 13.575,
+          "outputEnd": 17.287
+        }
+      ],
+      "durationSeconds": 17.287
+    }
+  ]
+}

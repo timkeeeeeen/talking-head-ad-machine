@@ -1,0 +1,93 @@
+{
+  "ok": true,
+  "strict": true,
+  "lint": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "filesScanned": 1
+  },
+  "runtime": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": []
+  },
+  "layout": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "duration": 17.287,
+    "samples": [
+      0.96,
+      2.881,
+      4.802,
+      6.723,
+      8.644,
+      10.564,
+      12.485,
+      14.406,
+      16.327
+    ],
+    "transitionSamples": [],
+    "transitionSamplesDropped": 0,
+    "tolerance": 2,
+    "totalIssueCount": 0,
+    "truncated": false
+  },
+  "motion": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": true,
+    "specPath": "jobs/distributable-proof/hyperframes/proof-4x5-4x5/index.motion.json",
+    "samples": 300
+  },
+  "contrast": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": true,
+    "samples": [
+      0.96,
+      4.802,
+      8.644,
+      12.485,
+      16.327
+    ],
+    "checked": 6,
+    "passed": 6
+  },
+  "snapshots": {
+    "enabled": true,
+    "files": [
+      "snapshots/frame-00-at-1.0s.png",
+      "snapshots/frame-01-at-4.8s.png",
+      "snapshots/frame-02-at-8.6s.png",
+      "snapshots/frame-03-at-12.5s.png",
+      "snapshots/frame-04-at-16.3s.png"
+    ],
+    "times": [
+      0.96,
+      4.802,
+      8.644,
+      12.485,
+      16.327
+    ],
+    "findingFiles": []
+  },
+  "_meta": {
+    "version": "0.7.86",
+    "latestVersion": "0.7.86",
+    "updateAvailable": false
+  }
+}
