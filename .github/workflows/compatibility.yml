@@ -75,7 +75,7 @@ jobs:
 
   intel-mac-buyer-zip-acceptance:
     name: Intel Mac buyer ZIP acceptance
-    runs-on: macos-14
+    runs-on: macos-15-intel
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
