@@ -24,4 +24,4 @@ The gate must prove:
 - The source-media hash remains unchanged.
 - Re-running installation succeeds without destructive cleanup.
 
-Retain `dist/acceptance-report-PLATFORM.json` and `acceptance/PLATFORM/latest-report.json` as evidence. Update `docs/COMPATIBILITY.md` and funnel claims only after reviewing both reports.
+Retain `dist/acceptance-report-PLATFORM.json` and `acceptance/PLATFORM/latest-report.json` as evidence. Record the accepted artifact SHA-256 under `docs/acceptance` and update funnel claims only after reviewing both reports. Acceptance records are intentionally excluded from buyer ZIPs so recording evidence cannot change the artifact it certifies.

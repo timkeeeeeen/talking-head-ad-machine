@@ -6,7 +6,7 @@ import hashlib
 import json
 import shutil
 import zipfile
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +35,7 @@ MAC_ONLY_FILES = {
 }
 WINDOWS_ONLY_FILES = {Path("install.ps1"), Path("bin/ad-machine.ps1")}
 EXCLUDED_SUFFIXES = {".pyc", ".pyo", ".DS_Store"}
+ZIP_TIMESTAMP = (2020, 1, 1, 0, 0, 0)
 FORBIDDEN_TEXT = (
     b"/Users/" + b"lappy",
     b"Photo Booth" + b" Library",
@@ -56,6 +57,8 @@ def include_core(path: Path, platform_id: str) -> bool:
         return False
     if relative.parts and relative.parts[0] == "acceptance":
         return False
+    if relative.parts[:2] == ("docs", "acceptance"):
+        return False
     if relative.parts[:2] == ("extensions", "catalog"):
         return False
     if relative.parts and relative.parts[0] == "jobs" and relative.name != ".gitkeep":
@@ -71,6 +74,21 @@ def include_core(path: Path, platform_id: str) -> bool:
     return path.is_file()
 
 
+def write_deterministic_file(
+    archive: zipfile.ZipFile,
+    source: Path,
+    destination: Path,
+    *,
+    executable: bool = False,
+) -> None:
+    archive_name = PurePosixPath(*destination.parts).as_posix()
+    info = zipfile.ZipInfo(archive_name, date_time=ZIP_TIMESTAMP)
+    info.create_system = 3
+    info.compress_type = zipfile.ZIP_DEFLATED
+    info.external_attr = ((0o100755 if executable else 0o100644) << 16)
+    archive.writestr(info, source.read_bytes(), compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+
+
 def write_core_zip(platform_id: str) -> Path:
     if platform_id not in CORE_PLATFORMS:
         raise ValueError(f"unsupported release platform: {platform_id}")
@@ -78,7 +96,13 @@ def write_core_zip(platform_id: str) -> Path:
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for path in sorted(ROOT.rglob("*")):
             if include_core(path, platform_id):
-                archive.write(path, Path("talking-head-ad-machine") / path.relative_to(ROOT))
+                relative = path.relative_to(ROOT)
+                write_deterministic_file(
+                    archive,
+                    path,
+                    Path("talking-head-ad-machine") / relative,
+                    executable=relative in MAC_ONLY_FILES,
+                )
     return output
 
 
@@ -88,7 +112,7 @@ def write_module_zip(module_dir: Path) -> Path:
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for path in sorted(module_dir.rglob("*")):
             if path.is_file() and "__pycache__" not in path.parts:
-                archive.write(path, path.relative_to(module_dir))
+                write_deterministic_file(archive, path, path.relative_to(module_dir))
     return output
 
 
